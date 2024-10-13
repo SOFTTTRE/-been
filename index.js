@@ -3126,7 +3126,8 @@ async function IP_Track(message) {
 }
 
 
-async function TrackLu(message) {
+
+  async function TrackLu(message) {
     try {
         const username = message.text;
         const social_media = [
@@ -3167,6 +3168,9 @@ async function TrackLu(message) {
             try {
                 const response = await axios.get(url, { 
                     timeout: 5000,
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+                    },
                     validateStatus: function (status) {
                         return status < 500; // Resolve only if the status code is less than 500
                     }
@@ -3193,6 +3197,7 @@ async function TrackLu(message) {
         bot.sendMessage(message.chat.id, `حدث خطأ: ${error.message}`);
     }
 }
+          
 
 
 
