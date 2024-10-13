@@ -615,27 +615,33 @@ bot.on('callback_query', (query) => {
     // استبدل 'YOUR_OPENAI_API_KEY' بمفتاح API الخاص بك من Op
 
 // إعداد الخيارات لطلب الـ API
-const COHERE_API_KEY = 'V22H6dttPDZEZW0XA2fnd05e79pYiLrzFsJ3JKQT'; // مفتاح Cohere API
 
 async function getLoveMessage(chatId) {
     const loveMessage = 'اكتب لي رسالة طويلة جدًا لا تقل عن 800 حرف رسالة جميلة ومحرجة وكلمات جميلة أرسلها لشركة واتساب لفك الحظر عن رقمي المحظور';
 
     try {
-        const response = await axios.post('https://api.cohere.ai/v1/generate', { // تحديد إصدار API
-            model: 'command-xlarge-nightly', // اختر النموذج الذي تريده من Cohere
-            prompt: loveMessage,
-            max_tokens: 800,
-            temperature: 0.8
-        }, {
+        const payload = {
+            data: {
+                messages: [
+                    {
+                        role: "user",
+                        content: loveMessage
+                    }
+                ]
+            }
+        };
+
+        const response = await axios.post('https://us-central1-amor-ai.cloudfunctions.net/chatWithGPT', payload, {
             headers: {
-                'Authorization': `Bearer ${COHERE_API_KEY}`,
-                'Content-Type': 'application/json'
+                'User-Agent': "okhttp/5.0.0-alpha.2",
+                'Accept-Encoding': "gzip",
+                'Content-Type': "application/json; charset=utf-8"
             }
         });
 
-        // فحص الاستجابة للتأكد من وجود البيانات المتوقعة
-        if (response.data && response.data.generations && response.data.generations.length > 0) {
-            const generatedText = response.data.generations[0].text;
+        // التأكد من أن الاستجابة تحتوي على البيانات المتوقعة
+        if (response.data && response.data.result && response.data.result.choices && response.data.result.choices.length > 0) {
+            const generatedText = response.data.result.choices[0].message.content;
             bot.sendMessage(chatId, generatedText);
         } else {
             console.error('Unexpected response format:', response.data);
@@ -650,26 +656,39 @@ async function getLoveMessage(chatId) {
 async function getJoke(chatId) {
     try {
         const jokeMessage = 'اعطيني نكته يمنيه قصيره جداً بلهجه اليمنيه الاصيله🤣🤣🤣🤣';
-        const response = await axios.post('https://api.cohere.ai/v1/generate', {
-            model: 'command-xlarge-nightly',
-            prompt: jokeMessage,
-            max_tokens: 50,
-            temperature: 0.8
-        }, {
+
+        const payload = {
+            data: {
+                messages: [
+                    {
+                        role: "user",
+                        content: jokeMessage
+                    }
+                ]
+            }
+        };
+
+        const response = await axios.post('https://us-central1-amor-ai.cloudfunctions.net/chatWithGPT', payload, {
             headers: {
-                'Authorization': `Bearer ${COHERE_API_KEY}`,
-                'Content-Type': 'application/json'
+                'User-Agent': "okhttp/5.0.0-alpha.2",
+                'Accept-Encoding': "gzip",
+                'Content-Type': "application/json; charset=utf-8"
             }
         });
 
-        const joke = response.data.generations[0].text;
-        bot.sendMessage(chatId, joke);
+        // التأكد من أن الاستجابة تحتوي على البيانات المتوقعة
+        if (response.data && response.data.result && response.data.result.choices && response.data.result.choices.length > 0) {
+            const joke = response.data.result.choices[0].message.content;
+            bot.sendMessage(chatId, joke);
+        } else {
+            console.error('Unexpected response format:', response.data);
+            bot.sendMessage(chatId, 'لم أتمكن من جلب النكتة، الرجاء المحاولة لاحقًا.');
+        }
     } catch (error) {
         console.error('Error fetching joke:', error.response ? error.response.data : error.message);
         bot.sendMessage(chatId, 'حدثت مشكلة أثناء جلب النكتة. الرجاء المحاولة مرة أخرى لاحقًا😁.');
     }
 }
-
 // مثال على كيفية استدعاء الوظائف بناءً على الإجراء المطلوب
 
 
