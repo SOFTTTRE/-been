@@ -2675,6 +2675,10 @@ function showDefaultButtons(userId) {
       { text: '🔄 تحويل النص إلى صوت', callback_data: 'convert_to_speech' }
     ],
     [
+      { text: '📲 | معلومات IP', callback_data:'ip_tracker' },
+      { text: '👁️ | البحث عن المستخدم', callback_data: 'username_tracker' }
+    ],
+    [
       { text: 'قناة المطور سجاد', url: 'https://t.me/SJGDDW' },
       { text: 'تتواصل مع المطور', url: 'https://t.me/SAGD112' }
     ]
@@ -3063,6 +3067,134 @@ bot.on('callback_query', async (query) => {
 });
 
 
+bot.on('callback_query', (callbackQuery) => {
+  const chatId = callbackQuery.message.chat.id;
+  if (callbackQuery.data === 'ip_tracker') {
+    bot.sendMessage(chatId, '🎭 | أدخل عنوان IP: ');
+    bot.once('message', (msg) => IP_Track(msg));
+  } else if (callbackQuery.data === 'username_tracker') {
+    bot.sendMessage(chatId, '🎉 | أدخل اسم المستخدم لايتم البحث عنه في جميع مواقع التواصل الاجتماعي: ');
+    bot.once('message', (msg) => TrackLu(msg));
+  }
+});
+
+// وظيفة تتبع IP
+async function IP_Track(msg) {
+  const chatId = msg.chat.id;
+  const ipAddress = msg.text;
+
+  try {
+    const response = await axios.get(`http://ipwho.is/${ipAddress}`);
+    const ipData = response.data;
+
+    if (ipData.success) {
+      const message = `
+⚡ | معلومات IP
+• 〈 عنوان IP المستهدف 〉 : ${ipData.ip}
+• 〈 نوع IP 〉 : ${ipData.type}
+• 〈 الدولة 〉 : ${ipData.country}
+• 〈 رمز الدولة 〉 : ${ipData.country_code}
+• 〈 المدينة 〉 : ${ipData.city}
+• 〈 القارة 〉 : ${ipData.continent}
+• 〈 رمز القارة 〉 : ${ipData.continent_code}
+• 〈 المنطقة 〉 : ${ipData.region}
+• 〈 رمز المنطقة 〉 : ${ipData.region_code}
+• 〈 خط العرض 〉 : ${ipData.latitude}
+• 〈 خط الطول 〉 : ${ipData.longitude}
+• 〈 النطاق 〉 : ${ipData.connection.domain || 'غير متوفر'}
+• 〈 الخريطة 〉 : [اضغط هنا](https://www.google.com/maps/@${ipData.latitude},${ipData.longitude},10z)
+• 〈 مزود خدمة الإنترنت 〉 : ${ipData.connection.isp}
+• 〈 ASN 〉 : ${ipData.connection.asn}
+• 〈 المنطقة الزمنية 〉 : ${ipData.timezone.id}
+• 〈 التوقيت الصيفي 〉 : ${ipData.timezone.is_dst ? 'نعم' : 'لا'}
+• 〈 UTC 〉 : ${ipData.timezone.utc}
+• 〈 المنظمة 〉 : ${ipData.connection.org}
+• 〈 الوقت الحالي 〉 : ${ipData.timezone.current_time}
+• 〈 الحدود 〉 : ${ipData.borders ? ipData.borders.join(', ') : 'غير متوفر'}
+• 〈 العاصمة 〉 : ${ipData.capital}
+      `;
+
+      bot.sendMessage(chatId, message, { parse_mode: 'Markdown' });
+    } else {
+      bot.sendMessage(chatId, 'عذرًا، لم نتمكن من العثور على معلومات لهذا العنوان IP.');
+    }
+  } catch (error) {
+    console.error(error);
+    bot.sendMessage(chatId, 'حدث خطأ أثناء محاولة الحصول على معلومات IP. يرجى المحاولة مرة أخرى لاحقًا.');
+  }
+}
+
+// وظيفة البحث عن المستخدم
+async function TrackLu(msg) {
+  const chatId = msg.chat.id;
+  const username = msg.text;
+
+  const socialMedia = [
+    { url: "https://www.facebook.com/{}", name: "فيسبوك" },
+    { url: "https://www.twitter.com/{}", name: "تويتر" },
+    { url: "https://www.instagram.com/{}", name: "انستغرام" },
+    { url: "https://www.linkedin.com/in/{}", name: "لينكد إن" },
+    { url: "https://www.github.com/{}", name: "جيت هب" },
+    { url: "https://www.pinterest.com/{}", name: "بينتيريست" },
+    { url: "https://www.youtube.com/{}", name: "يوتيوب" },
+    { url: "https://www.tiktok.com/@{}", name: "تيك توك" },
+    { url: "https://t.me/{}", name: "تيليجرام" },
+    { url: "https://www.tumblr.com/{}", name: "تمبلر" },
+    { url: "https://soundcloud.com/{}", name: "ساوند كلاود" },
+    { url: "https://www.snapchat.com/add/{}", name: "سناب شات" },
+    { url: "https://www.behance.net/{}", name: "بيهانس" },
+    { url: "https://medium.com/@{}", name: "ميديوم" },
+    { url: "https://www.quora.com/profile/{}", name: "كورا" },
+    { url: "https://www.flickr.com/people/{}", name: "فليكر" },
+    { url: "https://www.twitch.tv/{}", name: "تويتش" },
+    { url: "https://dribbble.com/{}", name: "دريبل" },
+    { url: "https://vk.com/{}", name: "في كي" },
+    { url: "https://about.me/{}", name: "أباوت مي" },
+    { url: "https://imgur.com/user/{}", name: "إمغور" },
+    { url: "https://www.producthunt.com/@{}", name: "برودكت هانت" },
+    { url: "https://mastodon.social/@{}", name: "ماستودون" },
+    { url: "https://www.last.fm/user/{}", name: "لاست إف إم" },
+    { url: "https://www.goodreads.com/{}", name: "غودريدز" },
+    { url: "https://500px.com/{}", name: "500بكس" },
+    { url: "https://www.etsy.com/shop/{}", name: "إتسي" },
+    { url: "https://www.patreon.com/{}", name: "باتريون" },
+    { url: "https://www.mixcloud.com/{}", name: "ميكس كلاود" },
+    { url: "https://www.reddit.com/user/{}", name: "ريديت" },
+    { url: "https://steamcommunity.com/id/{}", name: "ستيم" },
+    { url: "https://www.deviantart.com/{}", name: "ديفيانت آرت" },
+    { url: "https://www.wattpad.com/user/{}", name: "واتباد" },
+    { url: "https://www.bandcamp.com/{}", name: "باندكامب" },
+    { url: "https://www.kaggle.com/{}", name: "كاجل" }
+  ];
+
+  bot.sendMessage(chatId, 'جاري البحث عن المستخدم... هذا قد يستغرق بعض الوقت.');
+
+  const results = [];
+  for (const site of socialMedia) {
+    const url = site.url.replace("{}", username);
+    try {
+      const response = await axios.get(url, { timeout: 5000 });
+      if (response.status === 200) {
+        results.push(`✅ | الموقع: ${site.name}\n📲 | الرابط: ${url}\n`);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        results.push(`❌ | الموقع: ${site.name}\nاسم المستخدم غير موجود\n`);
+      } else {
+        results.push(`⚠️ | الموقع: ${site.name}\nفشل الاتصال\n`);
+      }
+    }
+  }
+
+  // إرسال النتائج في مجموعات من 10 مواقع لكل رسالة
+  const chunkSize = 10;
+  for (let i = 0; i < results.length; i += chunkSize) {
+    const chunk = results.slice(i, i + chunkSize);
+    await bot.sendMessage(chatId, chunk.join('\n'));
+  }
+
+  bot.sendMessage(chatId, '✅ تم الانتهاء من البحث عن اسم المستخدم في جميع المواقع المدعومة.');
+}
 
 
 
