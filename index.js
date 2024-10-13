@@ -3068,8 +3068,7 @@ bot.on('callback_query', async (query) => {
 
 
 
-  
-bot.on('callback_query', (callbackQuery) => {
+ bot.on('callback_query', (callbackQuery) => {
     const message = callbackQuery.message;
     const data = callbackQuery.data;
 
@@ -3077,7 +3076,7 @@ bot.on('callback_query', (callbackQuery) => {
         bot.sendMessage(message.chat.id, "🎭 | أدخل عنوان IP: ");
         bot.once('message', (msg) => IP_Track(msg));
     } else if (data === "username_tracker") {
-        bot.sendMessage(message.chat.id, "🎉 | أدخل اسم المستخدم لايتم البحث عنه في جميع المواقع الذي تحمل نفس الاسم: ");
+        bot.sendMessage(message.chat.id, "🎉 | أدخل اسم المستخدم: لايتم البحث عنه في جميع المواقع المسجله بنفس الاسم ");
         bot.once('message', (msg) => TrackLu(msg));
     }
 });
@@ -3109,7 +3108,7 @@ async function IP_Track(message) {
 • 〈 UTC 〉 : ${ip_data.timezone?.utc || 'غير متوفر'}
 • 〈 المنظمة 〉 : ${ip_data.connection?.org || 'غير متوفر'}
 • 〈 الوقت الحالي 〉 : ${ip_data.timezone?.current_time || 'غير متوفر'}
-• 〈 الحدود 〉 : ${ip_data.borders?.join(', ') || 'غير متوفر'}
+• 〈 الحدود 〉 : ${Array.isArray(ip_data.borders) ? ip_data.borders.join(', ') : 'غير متوفر'}
 • 〈 العاصمة 〉 : ${ip_data.capital || 'غير متوفر'}
 `;
         bot.sendMessage(message.chat.id, responseText, { parse_mode: 'Markdown' });
@@ -3157,7 +3156,12 @@ async function TrackLu(message) {
         for (const site of social_media) {
             const url = site.url.replace("{}", username);
             try {
-                const response = await axios.get(url, { timeout: 5000 });
+                const response = await axios.get(url, { 
+                    timeout: 5000,
+                    validateStatus: function (status) {
+                        return status < 500; // Resolve only if the status code is less than 500
+                    }
+                });
                 if (response.status === 200) {
                     results.push(`✅ | الموقع: ${site.name}\n📲 | الرابط: ${url}\n`);
                 } else {
@@ -3179,7 +3183,9 @@ async function TrackLu(message) {
     } catch (error) {
         bot.sendMessage(message.chat.id, `حدث خطأ: ${error.message}`);
     }
-}
+} 
+
+
 
 
 
