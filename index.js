@@ -3085,13 +3085,18 @@ async function IP_Track(message) {
     try {
         const response = await axios.get(`http://ipwho.is/${message.text}`);
         const ip_data = response.data;
-        
+
+        // عرض جميع المعلومات من الاستجابة
+        const borders = ip_data.borders || 'غير متوفر';
+        const flag = ip_data.flag ? ip_data.flag.emoji : 'غير متوفر';
+
         const responseText = `
 ⚡ | معلومات IP
 • 〈 عنوان IP المستهدف 〉 : ${ip_data.ip || 'غير متوفر'}
 • 〈 نوع IP 〉 : ${ip_data.type || 'غير متوفر'}
 • 〈 الدولة 〉 : ${ip_data.country || 'غير متوفر'}
 • 〈 رمز الدولة 〉 : ${ip_data.country_code || 'غير متوفر'}
+• 〈 العلم 〉 : ${flag}
 • 〈 المدينة 〉 : ${ip_data.city || 'غير متوفر'}
 • 〈 القارة 〉 : ${ip_data.continent || 'غير متوفر'}
 • 〈 رمز القارة 〉 : ${ip_data.continent_code || 'غير متوفر'}
@@ -3099,23 +3104,27 @@ async function IP_Track(message) {
 • 〈 رمز المنطقة 〉 : ${ip_data.region_code || 'غير متوفر'}
 • 〈 خط العرض 〉 : ${ip_data.latitude || 'غير متوفر'}
 • 〈 خط الطول 〉 : ${ip_data.longitude || 'غير متوفر'}
-• 〈 النطاق 〉 : ${ip_data.connection?.domain || 'غير متوفر'}
+• 〈 النطاق 〉 : ${(ip_data.connection && ip_data.connection.domain) || 'غير متوفر'}
 • 〈 الخريطة 〉 : [اضغط هنا](https://www.google.com/maps/@${ip_data.latitude},${ip_data.longitude},10z)
-• 〈 مزود خدمة الإنترنت 〉 : ${ip_data.connection?.isp || 'غير متوفر'}
-• 〈 ASN 〉 : ${ip_data.connection?.asn || 'غير متوفر'}
-• 〈 المنطقة الزمنية 〉 : ${ip_data.timezone?.id || 'غير متوفر'}
-• 〈 التوقيت الصيفي 〉 : ${ip_data.timezone?.is_dst ? 'نعم' : 'لا'}
-• 〈 UTC 〉 : ${ip_data.timezone?.utc || 'غير متوفر'}
-• 〈 المنظمة 〉 : ${ip_data.connection?.org || 'غير متوفر'}
-• 〈 الوقت الحالي 〉 : ${ip_data.timezone?.current_time || 'غير متوفر'}
-• 〈 الحدود 〉 : ${Array.isArray(ip_data.borders) ? ip_data.borders.join(', ') : 'غير متوفر'}
+• 〈 مزود خدمة الإنترنت 〉 : ${(ip_data.connection && ip_data.connection.isp) || 'غير متوفر'}
+• 〈 ASN 〉 : ${(ip_data.connection && ip_data.connection.asn) || 'غير متوفر'}
+• 〈 المنطقة الزمنية 〉 : ${(ip_data.timezone && ip_data.timezone.id) || 'غير متوفر'}
+• 〈 التوقيت الصيفي 〉 : ${ip_data.timezone && ip_data.timezone.is_dst ? 'نعم' : 'لا'}
+• 〈 UTC 〉 : ${(ip_data.timezone && ip_data.timezone.utc) || 'غير متوفر'}
+• 〈 المنظمة 〉 : ${(ip_data.connection && ip_data.connection.org) || 'غير متوفر'}
+• 〈 الوقت الحالي 〉 : ${(ip_data.timezone && ip_data.timezone.current_time) || 'غير متوفر'}
+• 〈 الحدود 〉 : ${borders}
 • 〈 العاصمة 〉 : ${ip_data.capital || 'غير متوفر'}
+• 〈 كود الاتصال 〉 : ${ip_data.calling_code || 'غير متوفر'}
+• 〈 البريد 〉 : ${ip_data.postal || 'غير متوفر'}
+• 〈 الاتحاد الأوروبي 〉 : ${ip_data.is_eu ? 'نعم' : 'لا'}
 `;
         bot.sendMessage(message.chat.id, responseText, { parse_mode: 'Markdown' });
     } catch (error) {
         bot.sendMessage(message.chat.id, `حدث خطأ: ${error.message}`);
     }
 }
+
 
 async function TrackLu(message) {
     try {
