@@ -3087,27 +3087,31 @@ bot.on('callback_query', async (query) => {
 
 
 
-bot.action('ip_tracker', (callbackQuery) => {
-    const chatId = callbackQuery.message.chat.id;
-    bot.sendMessage(chatId, "🎭 | أدخل عنوان IP: ");
-    
-    bot.once('message', (msg) => {
-        if (msg.chat.id === chatId) {
-            IP_Track(msg);
-        }
-    });
+// التعامل مع الضغط على زر معلومات IP فقط
+bot.on('callback_query', (callbackQuery) => {
+    const message = callbackQuery.message;
+    const data = callbackQuery.data;
+
+    if (data === "ip_tracker") {
+        // تجاهل أي رسائل غير متعلقة بزر IP
+        bot.sendMessage(message.chat.id, "🎭 | أدخل عنوان IP: ");
+        bot.once('message', (msg) => {
+            if (callbackQuery.data === "ip_tracker") {
+                IP_Track(msg); // قم بعملية التحقق
+            }
+        });
+    } else if (data === "username_tracker") {
+        // تجاهل أي رسائل غير متعلقة بزر اسم المستخدم
+        bot.sendMessage(message.chat.id, "🎉 | أدخل اسم المستخدم: ");
+        bot.once('message', (msg) => {
+            if (callbackQuery.data === "username_tracker") {
+                TrackLu(msg); // قم بعملية البحث
+            }
+        });
+    }
 });
 
-bot.action('username_tracker', (callbackQuery) => {
-    const chatId = callbackQuery.message.chat.id;
-    bot.sendMessage(chatId, "🎉 | أدخل اسم المستخدم: ");
-    
-    bot.once('message', (msg) => {
-        if (msg.chat.id === chatId) {
-            TrackLu(msg);
-        }
-    });
-});
+// التأكد من أن IP_Track و TrackLu يتم استدعاؤهما فقط عند الحاجة
 
 
 async function IP_Track(message) {
