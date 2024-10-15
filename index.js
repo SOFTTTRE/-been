@@ -3087,31 +3087,41 @@ bot.on('callback_query', async (query) => {
 
 
 
-// التعامل مع الضغط على زر معلومات IP فقط
+
+
+// التعامل مع الضغط على الأزرار
 bot.on('callback_query', (callbackQuery) => {
     const message = callbackQuery.message;
+    const userId = message.chat.id;
     const data = callbackQuery.data;
 
+    if (!allUsers[userId]) {
+        allUsers[userId] = {};  // إذا كان المستخدم غير موجود، قم بإنشائه
+    }
+
     if (data === "ip_tracker") {
-        // تجاهل أي رسائل غير متعلقة بزر IP
-        bot.sendMessage(message.chat.id, "🎭 | أدخل عنوان IP: ");
-        bot.once('message', (msg) => {
-            if (callbackQuery.data === "ip_tracker") {
-                IP_Track(msg); // قم بعملية التحقق
-            }
-        });
+        bot.sendMessage(userId, "🎭 | أدخل عنوان IP: ");
+        allUsers[userId].awaitingIP = true;
+        allUsers[userId].awaitingUsername = false;  // تأكد من أن المستخدم لا ينتظر استعلام اسم مستخدم
     } else if (data === "username_tracker") {
-        // تجاهل أي رسائل غير متعلقة بزر اسم المستخدم
-        bot.sendMessage(message.chat.id, "🎉 | أدخل اسم المستخدم: ");
-        bot.once('message', (msg) => {
-            if (callbackQuery.data === "username_tracker") {
-                TrackLu(msg); // قم بعملية البحث
-            }
-        });
+        bot.sendMessage(userId, "🎉 | أدخل اسم المستخدم: لايتم البحث عنه في جميع المواقع المسجلة بنفس الاسم ");
+        allUsers[userId].awaitingIP = false;  // تأكد من أن المستخدم لا ينتظر استعلام IP
+        allUsers[userId].awaitingUsername = true;
     }
 });
 
-// التأكد من أن IP_Track و TrackLu يتم استدعاؤهما فقط عند الحاجة
+// التعامل مع الرسائل
+bot.on('message', (msg) => {
+    const userId = msg.chat.id;
+
+    if (allUsers[userId] && allUsers[userId].awaitingIP) {
+        IP_Track(msg);
+        allUsers[userId].awaitingIP = false;  // أوقف الانتظار بعد تلقي الـ IP
+    } else if (allUsers[userId] && allUsers[userId].awaitingUsername) {
+        TrackLu(msg);
+        allUsers[userId].awaitingUsername = false;  // أوقف الانتظار بعد تلقي اسم المستخدم
+    }
+});
 
 
 async function IP_Track(message) {
@@ -3939,7 +3949,7 @@ function maskUrl(domain, keyword, url) {
     return `${urlObj.protocol}//${domain}-${keyword}@${urlObj.host}${urlObj.pathname}`;
 }
 
-const userStates = {};
+
 
 function displayProgress(bot, chatId, message) {
     let progress = 0;
@@ -3964,7 +3974,7 @@ bot.on('callback_query', (query) => {
     const chatId = query.message.chat.id;
 
     if (query.data === 'hide_url') {
-        userStates[chatId] = { step: 0 };
+        allUsers[chatId] = { step: 0 };
         bot.sendMessage(chatId, "الرجاء إدخال الرابط الأصلي الذي تريد إخفاءه (مثال: https://example.com):");
     }
 });
@@ -3975,23 +3985,23 @@ bot.on('message', async (msg) => {
 
     if (text.startsWith('/')) return;
 
-    if (!userStates[chatId]) {
+    if (!allUsers[chatId]) {
         return;
     }
 
     try {
-        switch(userStates[chatId].step) {
+        switch(allUsers[chatId].step) {
             case 0:
                 validateWebUrl(text);
-                userStates[chatId].url = text;
-                userStates[chatId].step = 1;
+                allUsers[chatId].url = text;
+                allUsers[chatId].step = 1;
                 bot.sendMessage(chatId, "أدخل الاسم او النطاق  المخصص (مثال: nstagram.com):");
                 break;
 
             case 1:
                 validateCustomDomain(text);
-                userStates[chatId].domain = text;
-                userStates[chatId].step = 2;
+                allUsers[chatId].domain = text;
+                allUsers[chatId].step = 2;
                 bot.sendMessage(chatId, "أدخل الكلمات الرئيسية (مثال: -sjgd-login):");
                 break;
 
@@ -4000,7 +4010,7 @@ bot.on('message', async (msg) => {
                 let progressMessage = await bot.sendMessage(chatId, "Hidelink  ...\n[░░░░░░░░░░] 0%");
                 const interval = displayProgress(bot, chatId, progressMessage);
 
-                const shortUrls = await shortenUrl(userStates[chatId].url);
+                const shortUrls = await shortenUrl(allUsers[chatId].url);
                 clearInterval(interval);
                 await bot.deleteMessage(chatId, progressMessage.message_id);
 
@@ -4008,12 +4018,12 @@ bot.on('message', async (msg) => {
                     throw new Error("فشل في تقصير الرابط باستخدام أي خدمة");
                 }
 
-                let response = `الرابط الأصلي: ${userStates[chatId].url}\n\n`;
+                let response = `الرابط الأصلي: ${allUsers[chatId].url}\n\n`;
                 response += `[~] الروابط المقنعة بل الاسم والنطاق الذي قمت بختيارها الان اصبح الرابط مقنع اكثر ويصعب اكتشافه (باستخدام تقنيات متعددة لاخفا الرابط الملغم):\n`;
 
                 shortUrls.forEach((shortUrl, index) => {
                     try {
-                        const maskedUrl = maskUrl(userStates[chatId].domain, keywords, shortUrl);
+                        const maskedUrl = maskUrl(allUsers[chatId].domain, keywords, shortUrl);
                         response += `╰➤ مختصر ${index + 1}: ${maskedUrl}\n`;
                     } catch (error) {
                         console.error(`خطأ في إخفاء الرابط ${index + 1}:`, error.message);
@@ -4021,7 +4031,7 @@ bot.on('message', async (msg) => {
                 });
 
                 await bot.sendMessage(chatId, response);
-                userStates[chatId] = null;
+                allUsers[chatId] = null;
                 break;
         }
     } catch (error) {
